@@ -60,9 +60,9 @@ dev = [
 tunepac = "tunepac.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/700799/hydratune"
-Repository = "https://github.com/700799/hydratune"
-Issues = "https://github.com/700799/hydratune/issues"
+Homepage = "https://github.com/700799/tunepac"
+Repository = "https://github.com/700799/tunepac"
+Issues = "https://github.com/700799/tunepac/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["tunepac"]

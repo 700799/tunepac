@@ -1,6 +1,6 @@
 # Tunepac
 
-[![CI](https://github.com/700799/hydratune/actions/workflows/ci.yml/badge.svg)](https://github.com/700799/hydratune/actions/workflows/ci.yml)
+[![CI](https://github.com/700799/tunepac/actions/workflows/ci.yml/badge.svg)](https://github.com/700799/tunepac/actions/workflows/ci.yml)
 
 **Tunepac is a YAML-configurable LLM fine-tuning harness**, inspired by
 [Axolotl](https://github.com/axolotl-ai-cloud/axolotl). You describe a
