@@ -3,9 +3,11 @@ name: Release
 # Publishes to PyPI when a version tag is pushed:
 #   git tag v0.1.0 && git push origin v0.1.0
 #
-# Requires a repository secret named PYPI_API_TOKEN (a PyPI API token, the
-# value starting with "pypi-"). The token is only ever read by the publish
-# step; nothing echoes it.
+# Authenticates via PyPI Trusted Publishing (OIDC) — no API token is stored
+# anywhere. PyPI matches the OIDC claim field by field, so the publisher
+# registered there must say exactly:
+#   owner 700799 · repository tunepac · workflow release.yml · environment pypi
+# "Workflow name" there is this file's name, not the `name:` above it.
 on:
   push:
     tags:
@@ -54,8 +56,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # A GitHub Environment gives you an optional manual approval gate before
-    # anything reaches PyPI; a PyPI upload cannot be undone.
+    # anything reaches PyPI; a PyPI upload cannot be undone. The name must
+    # match the environment on the PyPI publisher registration.
     environment: pypi
+    permissions:
+      # Mint the short-lived OIDC token PyPI verifies. This is the only
+      # permission the job needs; everything else drops to none, and
+      # download-artifact resolves same-run artifacts through the Actions
+      # runtime token rather than GITHUB_TOKEN.
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -63,6 +72,3 @@ jobs:
           path: dist/
 
       - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
