@@ -1,6 +1,6 @@
-"""Translate a validated :class:`HydraTuneConfig` into a TRL ``SFTTrainer`` run.
+"""Translate a validated :class:`TunepacConfig` into a TRL ``SFTTrainer`` run.
 
-This module is only imported by the CLI when ``hydratune train`` actually
+This module is only imported by the CLI when ``tunepac train`` actually
 runs, so the base install (config + validate) never needs torch, TRL, or
 CUDA. All heavy third-party imports therefore live inside functions.
 
@@ -17,10 +17,10 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from hydratune.config.schema import HydraTuneConfig, TrainingConfig
-from hydratune.data.chat_templates import resolve_chat_template
-from hydratune.data.formatting import to_messages
-from hydratune.utils.errors import ChatTemplateError, DatasetError, OOMRiskError
+from tunepac.config.schema import TrainingConfig, TunepacConfig
+from tunepac.data.chat_templates import resolve_chat_template
+from tunepac.data.formatting import to_messages
+from tunepac.utils.errors import ChatTemplateError, DatasetError, OOMRiskError
 
 if TYPE_CHECKING:  # pragma: no cover - typing only, avoids hard deps
     from datasets import Dataset
@@ -36,7 +36,7 @@ _OOM_HINTS: list[str] = [
 ]
 
 
-def load_tokenizer(config: HydraTuneConfig) -> PreTrainedTokenizerBase:
+def load_tokenizer(config: TunepacConfig) -> PreTrainedTokenizerBase:
     """Load the tokenizer and apply/verify the configured chat template."""
     from transformers import AutoTokenizer
 
@@ -62,7 +62,7 @@ def load_tokenizer(config: HydraTuneConfig) -> PreTrainedTokenizerBase:
 
 
 def load_datasets(
-    config: HydraTuneConfig, tokenizer: PreTrainedTokenizerBase
+    config: TunepacConfig, tokenizer: PreTrainedTokenizerBase
 ) -> tuple[Dataset, Dataset | None]:
     """Load, format, and optionally split the dataset into (train, eval)."""
     from datasets import load_dataset
@@ -107,7 +107,7 @@ def load_datasets(
     return dataset, None
 
 
-def load_model(config: HydraTuneConfig) -> PreTrainedModel:
+def load_model(config: TunepacConfig) -> PreTrainedModel:
     """Load the base model with the configured precision/quantization."""
     import torch
     from transformers import AutoModelForCausalLM, BitsAndBytesConfig
@@ -142,7 +142,7 @@ def load_model(config: HydraTuneConfig) -> PreTrainedModel:
         ) from exc
 
 
-def build_peft_config(config: HydraTuneConfig) -> Any | None:
+def build_peft_config(config: TunepacConfig) -> Any | None:
     """Build a peft.LoraConfig, or None for full fine-tuning."""
     from peft import LoraConfig
 
@@ -181,7 +181,7 @@ def resolve_warmup_steps(training: TrainingConfig, num_train_records: int) -> in
     return max(1, round(total_updates * training.warmup_ratio))
 
 
-def run_training(config: HydraTuneConfig) -> Path:
+def run_training(config: TunepacConfig) -> Path:
     """Execute a full SFT run and return the output directory."""
     import torch
     from trl import SFTConfig, SFTTrainer

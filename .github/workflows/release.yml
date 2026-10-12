@@ -29,7 +29,7 @@ jobs:
       - name: Verify the tag matches the packaged version
         run: |
           tag="${GITHUB_REF_NAME#v}"
-          pkg="$(python -c 'import hydratune; print(hydratune.__version__)')"
+          pkg="$(python -c 'import tunepac; print(tunepac.__version__)')"
           if [ "$tag" != "$pkg" ]; then
             echo "::error::Tag $GITHUB_REF_NAME does not match __version__ $pkg"
             exit 1

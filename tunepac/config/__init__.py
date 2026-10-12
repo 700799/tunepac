@@ -1,25 +1,25 @@
 """Configuration schema and loading."""
 
-from hydratune.config.loader import load_config
-from hydratune.config.schema import (
+from tunepac.config.loader import load_config
+from tunepac.config.schema import (
     BaseModelConfig,
     DatasetConfig,
     HardwareConfig,
-    HydraTuneConfig,
     PeftConfig,
     QuantizationConfig,
     TrainingConfig,
+    TunepacConfig,
 )
-from hydratune.utils.errors import ConfigError
+from tunepac.utils.errors import ConfigError
 
 __all__ = [
     "BaseModelConfig",
     "ConfigError",
     "DatasetConfig",
     "HardwareConfig",
-    "HydraTuneConfig",
     "PeftConfig",
     "QuantizationConfig",
     "TrainingConfig",
+    "TunepacConfig",
     "load_config",
 ]

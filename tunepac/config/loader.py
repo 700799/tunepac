@@ -1,7 +1,7 @@
-"""Load and validate a HydraTune YAML config file.
+"""Load and validate a Tunepac YAML config file.
 
 Translates YAML parse errors and Pydantic validation errors into a single
-:class:`~hydratune.utils.errors.ConfigError` whose message reads like a
+:class:`~tunepac.utils.errors.ConfigError` whose message reads like a
 lint report (``section.field: problem``), so the CLI never shows users a
 raw traceback for a bad config.
 """
@@ -14,8 +14,8 @@ from typing import Any
 import yaml
 from pydantic import ValidationError
 
-from hydratune.config.schema import HydraTuneConfig
-from hydratune.utils.errors import ConfigError
+from tunepac.config.schema import TunepacConfig
+from tunepac.utils.errors import ConfigError
 
 
 def _format_validation_error(exc: ValidationError) -> str:
@@ -26,8 +26,8 @@ def _format_validation_error(exc: ValidationError) -> str:
     return "\n".join(lines)
 
 
-def load_config(path: str | Path) -> HydraTuneConfig:
-    """Parse ``path`` as YAML and validate it against :class:`HydraTuneConfig`.
+def load_config(path: str | Path) -> TunepacConfig:
+    """Parse ``path`` as YAML and validate it against :class:`TunepacConfig`.
 
     Raises:
         ConfigError: if the file is missing, is not valid YAML, is not a
@@ -53,6 +53,6 @@ def load_config(path: str | Path) -> HydraTuneConfig:
         )
 
     try:
-        return HydraTuneConfig.model_validate(raw)
+        return TunepacConfig.model_validate(raw)
     except ValidationError as exc:
         raise ConfigError(_format_validation_error(exc)) from exc

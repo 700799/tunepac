@@ -31,7 +31,7 @@ jobs:
       # Base install only: the integration tests skip themselves without the
       # [train] extra, so this job stays fast and CUDA-free.
       - run: pip install -e ".[dev]"
-      - run: pytest -q --cov=hydratune --cov-report=term-missing
+      - run: pytest -q --cov=tunepac --cov-report=term-missing
 
   integration:
     runs-on: ubuntu-latest

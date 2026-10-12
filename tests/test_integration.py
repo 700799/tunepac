@@ -2,7 +2,7 @@
 
 These tests build a ~100k-parameter Llama-architecture checkpoint and a small
 BPE tokenizer on the fly (no network), then drive the actual
-:func:`hydratune.training.trainer.run_training` pipeline. They skip
+:func:`tunepac.training.trainer.run_training` pipeline. They skip
 automatically on a base install without the ``[train]`` extra, and each run
 completes in a few seconds on CPU.
 """
@@ -21,10 +21,10 @@ transformers = pytest.importorskip("transformers")
 tokenizers = pytest.importorskip("tokenizers")
 pytest.importorskip("datasets")
 
-from hydratune.config.schema import HydraTuneConfig  # noqa: E402
-from hydratune.export.merge import merge_adapter  # noqa: E402
-from hydratune.training.trainer import run_training  # noqa: E402
-from hydratune.utils.errors import ChatTemplateError, ExportError  # noqa: E402
+from tunepac.config.schema import TunepacConfig  # noqa: E402
+from tunepac.export.merge import merge_adapter  # noqa: E402
+from tunepac.training.trainer import run_training  # noqa: E402
+from tunepac.utils.errors import ChatTemplateError, ExportError  # noqa: E402
 
 CORPUS = [
     "What is the capital of France? The capital of France is Paris.",
@@ -89,7 +89,7 @@ def dataset_file(tmp_path: Path) -> Path:
 
 def make_config(
     tiny_model_dir: Path, dataset_file: Path, output_dir: Path, **overrides: Any
-) -> HydraTuneConfig:
+) -> TunepacConfig:
     settings: dict[str, Any] = {
         "base_model": {"name": str(tiny_model_dir)},
         "dataset": {
@@ -116,7 +116,7 @@ def make_config(
     }
     for section, values in overrides.items():
         settings[section].update(values)
-    return HydraTuneConfig.model_validate(settings)
+    return TunepacConfig.model_validate(settings)
 
 
 def test_training_produces_loadable_lora_adapter(
@@ -195,7 +195,7 @@ def test_merge_requires_a_peft_section(
     config = make_config(tiny_model_dir, dataset_file, tmp_path / "out")
     full_finetune = config.model_dump(exclude={"torch_dtype", "peft"})
     with pytest.raises(ExportError, match="no 'peft' section"):
-        merge_adapter(HydraTuneConfig.model_validate(full_finetune))
+        merge_adapter(TunepacConfig.model_validate(full_finetune))
 
 
 def test_tokenizer_default_without_template_fails_fast(

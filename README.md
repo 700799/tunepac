@@ -1,11 +1,11 @@
-# HydraTune
+# Tunepac
 
 [![CI](https://github.com/700799/hydratune/actions/workflows/ci.yml/badge.svg)](https://github.com/700799/hydratune/actions/workflows/ci.yml)
 
-**HydraTune is a YAML-configurable LLM fine-tuning harness**, inspired by
+**Tunepac is a YAML-configurable LLM fine-tuning harness**, inspired by
 [Axolotl](https://github.com/axolotl-ai-cloud/axolotl). You describe a
 training run — base model, dataset, hyperparameters, LoRA/QLoRA settings,
-hardware trade-offs — in a single human-readable `config.yaml`, and HydraTune
+hardware trade-offs — in a single human-readable `config.yaml`, and Tunepac
 turns it into a supervised fine-tuning run on Hugging Face
 [TRL](https://github.com/huggingface/trl)'s `SFTTrainer`, with
 [PEFT](https://github.com/huggingface/peft) adapters and
@@ -32,8 +32,8 @@ peft:
 ```
 
 ```bash
-hydratune validate --config config.yaml   # catch mistakes before GPU time
-hydratune train    --config config.yaml   # run it
+tunepac validate --config config.yaml   # catch mistakes before GPU time
+tunepac train    --config config.yaml   # run it
 ```
 
 ---
@@ -81,7 +81,7 @@ hydratune train    --config config.yaml   # run it
 - **Token packing** via TRL, on by default, so short examples don't waste
   sequence budget.
 - **Light by default.** The base install needs only `typer`, `pydantic`,
-  `PyYAML`, and `rich` — no CUDA, no torch. `hydratune validate` runs on a
+  `PyYAML`, and `rich` — no CUDA, no torch. `tunepac validate` runs on a
   laptop; heavy dependencies live behind the `[train]` extra and are
   imported lazily.
 - **Fail fast, fail helpfully.** Chat-template mismatches are detected
@@ -126,9 +126,9 @@ run the job — validation needs nothing heavy.
    sample of records checked against the declared format:
 
    ```text
-   $ hydratune validate --config example_config.yaml
+   $ tunepac validate --config example_config.yaml
    Config OK — schema validation passed.
-                      HydraTune run summary
+                      Tunepac run summary
    ┌───────────────────┬──────────────────────────────────────┐
    │ Base model        │ meta-llama/Meta-Llama-3-8B           │
    │ Dataset           │ yahma/alpaca-cleaned (alpaca)        │
@@ -144,15 +144,15 @@ run the job — validation needs nothing heavy.
 3. **Train:**
 
    ```bash
-   hydratune train --config example_config.yaml
+   tunepac train --config example_config.yaml
    ```
 
-4. **Multi-GPU** — HydraTune is Accelerate-native; launch the same command
+4. **Multi-GPU** — Tunepac is Accelerate-native; launch the same command
    through `accelerate`:
 
    ```bash
    accelerate config          # once, to describe your machine
-   accelerate launch -m hydratune.cli train --config example_config.yaml
+   accelerate launch -m tunepac.cli train --config example_config.yaml
    ```
 
 The trained adapter (or full model), tokenizer, and checkpoints land in
@@ -164,20 +164,20 @@ All commands take `--config` / `-c <path>` pointing at a YAML config file.
 
 | Command              | Status  | Purpose                                                        |
 | -------------------- | ------- | -------------------------------------------------------------- |
-| `hydratune train`    | working | Run the fine-tuning job described by the config.               |
-| `hydratune validate` | working | Validate the config schema; optionally sample local datasets.  |
-| `hydratune export`   | working | Merge a trained adapter into its base model. (GGUF: planned.) |
+| `tunepac train`    | working | Run the fine-tuning job described by the config.               |
+| `tunepac validate` | working | Validate the config schema; optionally sample local datasets.  |
+| `tunepac export`   | working | Merge a trained adapter into its base model. (GGUF: planned.) |
 
-### `hydratune train --config <file>`
+### `tunepac train --config <file>`
 
 Prints the run summary, then loads the tokenizer, dataset, and model and
 hands off to TRL's `SFTTrainer`. Training dependencies are imported at this
 point — if they're missing you get a one-line pointer to
-`pip install "hydratune[train]"` instead of an ImportError stack.
+`pip install "tunepac[train]"` instead of an ImportError stack.
 
 Exit codes: `0` success · `1` config error, dataset/template error, or OOM.
 
-### `hydratune validate --config <file> [--check-dataset | --no-check-dataset]`
+### `tunepac validate --config <file> [--check-dataset | --no-check-dataset]`
 
 Validates the config against the schema and prints the run summary. With
 `--check-dataset` (the default), local dataset files are additionally opened
@@ -188,13 +188,13 @@ parquet files are noted as requiring the training extras.
 
 Exit codes: `0` valid · `1` schema or dataset problems (each listed).
 
-### `hydratune export --config <file> [--adapter DIR] [--output DIR]`
+### `tunepac export --config <file> [--adapter DIR] [--output DIR]`
 
 Merges a trained LoRA/QLoRA adapter into its base model and writes a standalone
 model directory that loads with a plain `AutoModelForCausalLM.from_pretrained` —
 no PEFT needed at inference time.
 
-`--adapter` defaults to `training.output_dir` (where `hydratune train` leaves
+`--adapter` defaults to `training.output_dir` (where `tunepac train` leaves
 its adapter); `--output` defaults to `<adapter>/merged`. The tokenizer saved
 alongside the adapter is carried over, so an overridden chat template survives
 the merge.
@@ -211,7 +211,7 @@ GGUF conversion is not implemented — see [Roadmap](#roadmap).
 
 ### Global flags
 
-`hydratune --version` prints the installed version.
+`tunepac --version` prints the installed version.
 
 ## Configuration reference
 
@@ -220,7 +220,7 @@ A config file is a YAML mapping with up to five sections. **`base_model` and
 `peft` is optional (omit it entirely for full-parameter fine-tuning).
 
 Unknown keys anywhere are validation errors. The schema source of truth is
-[`hydratune/config/schema.py`](hydratune/config/schema.py).
+[`tunepac/config/schema.py`](tunepac/config/schema.py).
 
 ### `base_model`
 
@@ -284,7 +284,7 @@ Optimization hyperparameters and run bookkeeping.
 | `report_to`                   | enum          | `none`      | `wandb` · `tensorboard` · `none`.                                  |
 
 > **About `warmup_ratio`:** transformers 5 removed ratio-based warmup from
-> `TrainingArguments`, so HydraTune converts the ratio to a concrete step
+> `TrainingArguments`, so Tunepac converts the ratio to a concrete step
 > count itself, from the estimated total optimizer updates. With `packing`
 > enabled the estimate errs slightly long (records overcount packed
 > sequences) — acceptable for a warmup heuristic.
@@ -396,7 +396,7 @@ template is applied — the schema requires `chat_template: null`.
 A `dataset.path` ending in `.jsonl`, `.json`, `.csv`, or `.parquet` is
 treated as a local file (`.json` must be a top-level list of records);
 anything else is treated as a Hub dataset id loaded with `datasets`.
-`hydratune validate` can sample local `.jsonl`/`.json`/`.csv` files with no
+`tunepac validate` can sample local `.jsonl`/`.json`/`.csv` files with no
 ML dependencies installed.
 
 ## Chat templates
@@ -408,7 +408,7 @@ ML dependencies installed.
   you to pick an explicit template.
 - **`chatml`**, **`llama3`**, **`mistral`**, **`zephyr`** — overwrite
   `tokenizer.chat_template` with a known Jinja source
-  ([`hydratune/data/chat_templates.py`](hydratune/data/chat_templates.py)),
+  ([`tunepac/data/chat_templates.py`](tunepac/data/chat_templates.py)),
   making the rendered training text deterministic regardless of base model.
 
 Match the template to the base model family when fine-tuning an instruct
@@ -424,7 +424,7 @@ base model a chat format from scratch.
 packing at 4096 tokens, bf16, FlashAttention-2, gradient checkpointing.
 
 ```bash
-hydratune train --config example_config.yaml
+tunepac train --config example_config.yaml
 ```
 
 ### CPU smoke test — SmolLM2-135M, under 30 seconds
@@ -446,8 +446,8 @@ health check of the harness itself.
 ### Train, then ship a standalone model
 
 ```bash
-hydratune train  --config example_config.yaml   # writes an adapter
-hydratune export --config example_config.yaml   # merges it into the base model
+tunepac train  --config example_config.yaml   # writes an adapter
+tunepac export --config example_config.yaml   # merges it into the base model
 # -> outputs/llama3-8b-qlora/merged/  (loads without PEFT)
 ```
 
@@ -460,7 +460,7 @@ adapter to merge.)
 ### Multi-GPU
 
 ```bash
-accelerate launch -m hydratune.cli train --config config.yaml
+accelerate launch -m tunepac.cli train --config config.yaml
 ```
 
 `batch_size` is per device; the schema's `effective_batch_size`
@@ -472,7 +472,7 @@ by world size for the global batch.
 ### Config errors read like a lint report
 
 ```text
-$ hydratune validate --config bad.yaml
+$ tunepac validate --config bad.yaml
 Invalid configuration (3 error(s)):
   training.learning_rate: Input should be less than or equal to 1
   peft.lora_droput: Extra inputs are not permitted
@@ -506,25 +506,25 @@ processed, no GPU memory is touched.
 
 ### Dataset problems
 
-`hydratune validate` reports per-record mismatches (`record 3: alpaca record
+`tunepac validate` reports per-record mismatches (`record 3: alpaca record
 is missing keys ['output']`), unreadable files, and empty files. At training
 time, the same conversion runs over the full dataset, so a malformed record
 deep in the file still produces a `DatasetError` naming the record.
 
 ### `Training dependencies are not installed`
 
-`hydratune train` on a base install prints exactly what to run
-(`pip install "hydratune[train]"`) and exits 1.
+`tunepac train` on a base install prints exactly what to run
+(`pip install "tunepac[train]"`) and exits 1.
 
 ## Architecture
 
 ```
-hydratune/
-├── hydratune/
+tunepac/
+├── tunepac/
 │   ├── cli.py                  # Typer entry point: train / validate / export
 │   ├── config/
 │   │   ├── schema.py           # Pydantic v2 schema — the contract for config.yaml
-│   │   └── loader.py           # YAML → HydraTuneConfig with lint-style errors
+│   │   └── loader.py           # YAML → TunepacConfig with lint-style errors
 │   ├── data/
 │   │   ├── formatting.py       # format registry, record → messages, cheap dataset checks
 │   │   └── chat_templates.py   # named Jinja chat templates
@@ -533,7 +533,7 @@ hydratune/
 │   ├── export/
 │   │   └── merge.py            # adapter → merged standalone model (GGUF: planned)
 │   ├── utils/
-│   │   └── errors.py           # HydraTuneError hierarchy (ConfigError, DatasetError, OOMRiskError, ...)
+│   │   └── errors.py           # TunepacError hierarchy (ConfigError, DatasetError, OOMRiskError, ...)
 │   └── py.typed                # PEP 561: downstream users get our types
 ├── configs/test_smollm2.yaml   # CPU-friendly SmolLM2 LoRA recipe
 ├── scripts/run_test.py         # end-to-end smoke test
@@ -551,8 +551,8 @@ Design principles:
 - **Heavy imports are lazy.** `torch`/`trl`/`peft` are imported inside
   functions in `trainer.py`, keeping the CLI and validation usable on
   machines without them.
-- **Deliberate errors are typed.** Everything HydraTune raises on purpose
-  derives from `HydraTuneError`, so the CLI catches one type, prints a
+- **Deliberate errors are typed.** Everything Tunepac raises on purpose
+  derives from `TunepacError`, so the CLI catches one type, prints a
   readable message, and exits non-zero — while genuine bugs still traceback.
 
 ## Development

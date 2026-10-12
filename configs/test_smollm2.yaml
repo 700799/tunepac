@@ -1,10 +1,10 @@
-# HydraTune smoke-test config: LoRA on SmolLM2-135M-Instruct.
+# Tunepac smoke-test config: LoRA on SmolLM2-135M-Instruct.
 #
 # Designed to run end-to-end on CPU in seconds (tiny model, 5-row dataset):
 #
 #   python scripts/run_test.py                      # writes the dummy data, trains, saves adapter
-#   hydratune validate --config configs/test_smollm2.yaml
-#   hydratune train    --config configs/test_smollm2.yaml
+#   tunepac validate --config configs/test_smollm2.yaml
+#   tunepac train    --config configs/test_smollm2.yaml
 
 base_model:
   name: HuggingFaceTB/SmolLM2-135M-Instruct

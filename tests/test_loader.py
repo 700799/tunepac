@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from hydratune.config import ConfigError, load_config
+from tunepac.config import ConfigError, load_config
 
 VALID_MINIMAL = """
 base_model:
