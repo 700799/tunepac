@@ -1,9 +1,9 @@
-"""HydraTune command-line interface.
+"""Tunepac command-line interface.
 
 Commands:
-    hydratune train    --config config.yaml   Run a fine-tuning job.
-    hydratune validate --config config.yaml   Check config + dataset without training.
-    hydratune export   --config config.yaml   (planned) Merge adapters / export GGUF.
+    tunepac train    --config config.yaml   Run a fine-tuning job.
+    tunepac validate --config config.yaml   Check config + dataset without training.
+    tunepac export   --config config.yaml   (planned) Merge adapters / export GGUF.
 
 Heavy training dependencies (torch, TRL, PEFT) are imported only inside
 ``train``, so ``validate`` works on machines with just the base install.
@@ -19,13 +19,13 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from hydratune import __version__
-from hydratune.config import HydraTuneConfig, load_config
-from hydratune.data.formatting import inspect_local_dataset
-from hydratune.utils.errors import HydraTuneError
+from tunepac import __version__
+from tunepac.config import TunepacConfig, load_config
+from tunepac.data.formatting import inspect_local_dataset
+from tunepac.utils.errors import TunepacError
 
 app = typer.Typer(
-    name="hydratune",
+    name="tunepac",
     help="YAML-configurable LLM fine-tuning harness.",
     no_args_is_help=True,
     add_completion=False,
@@ -48,7 +48,7 @@ ConfigOption = Annotated[
 
 def _version_callback(value: bool) -> None:
     if value:
-        console.print(f"hydratune {__version__}")
+        console.print(f"tunepac {__version__}")
         raise typer.Exit()
 
 
@@ -83,22 +83,22 @@ def _require_training_extras() -> None:
         # print the wrong install command.
         error_console.print(
             f"Training dependencies are not installed (missing: {', '.join(missing)}).\n"
-            'Install them with: pip install "hydratune[train]"',
+            'Install them with: pip install "tunepac[train]"',
             markup=False,
         )
         raise typer.Exit(code=1)
 
 
-def _load_or_exit(config_path: Path) -> HydraTuneConfig:
+def _load_or_exit(config_path: Path) -> TunepacConfig:
     try:
         return load_config(config_path)
-    except HydraTuneError as exc:
+    except TunepacError as exc:
         error_console.print(str(exc))
         raise typer.Exit(code=1) from exc
 
 
-def _summarize(config: HydraTuneConfig) -> Table:
-    table = Table(title="HydraTune run summary", show_header=False, min_width=60)
+def _summarize(config: TunepacConfig) -> Table:
+    table = Table(title="Tunepac run summary", show_header=False, min_width=60)
     table.add_row("Base model", config.base_model.name)
     table.add_row("Dataset", f"{config.dataset.path} ({config.dataset.format})")
     if config.dataset.chat_template is not None:
@@ -129,11 +129,11 @@ def train(config: ConfigOption) -> None:
     _require_training_extras()
 
     # Imported here so the base install works without torch/TRL.
-    from hydratune.training.trainer import run_training
+    from tunepac.training.trainer import run_training
 
     try:
         output_dir = run_training(run_config)
-    except HydraTuneError as exc:
+    except TunepacError as exc:
         error_console.print(str(exc))
         raise typer.Exit(code=1) from exc
     console.print(f"[green]Training complete.[/green] Artifacts saved to {output_dir}")
@@ -206,11 +206,11 @@ def export(
     _require_training_extras()
 
     # Imported here so the base install works without torch/PEFT.
-    from hydratune.export import merge_adapter
+    from tunepac.export import merge_adapter
 
     try:
         output_dir = merge_adapter(run_config, adapter_dir=adapter, output_dir=output)
-    except HydraTuneError as exc:
+    except TunepacError as exc:
         error_console.print(str(exc))
         raise typer.Exit(code=1) from exc
     console.print(f"[green]Merge complete.[/green] Merged model saved to {output_dir}")

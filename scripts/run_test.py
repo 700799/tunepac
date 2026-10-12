@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""End-to-end smoke test for the HydraTune training pipeline.
+"""End-to-end smoke test for the Tunepac training pipeline.
 
 Reads ``configs/test_smollm2.yaml`` through the Pydantic v2 schema, writes a
 5-row dummy alpaca-format JSONL dataset, fine-tunes SmolLM2-135M-Instruct
@@ -26,8 +26,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))  # allow running without `pip install -e .`
 
-from hydratune.config import HydraTuneConfig, load_config  # noqa: E402
-from hydratune.utils.errors import HydraTuneError  # noqa: E402
+from tunepac.config import TunepacConfig, load_config  # noqa: E402
+from tunepac.utils.errors import TunepacError  # noqa: E402
 
 #: Five deterministic alpaca-format records — enough for a few optimizer steps.
 DUMMY_RECORDS: list[dict[str, str]] = [
@@ -62,7 +62,7 @@ DUMMY_RECORDS: list[dict[str, str]] = [
 EXPECTED_ADAPTER_FILES: tuple[str, ...] = ("adapter_config.json", "adapter_model.safetensors")
 
 
-def write_dummy_dataset(config: HydraTuneConfig) -> Path:
+def write_dummy_dataset(config: TunepacConfig) -> Path:
     """Create the dummy JSONL dataset at the path the config points to."""
     dataset_path = Path(config.dataset.path)
     dataset_path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,13 +75,13 @@ def write_dummy_dataset(config: HydraTuneConfig) -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="End-to-end smoke test for the HydraTune training pipeline."
+        description="End-to-end smoke test for the Tunepac training pipeline."
     )
     parser.add_argument(
         "--config",
         type=Path,
         default=REPO_ROOT / "configs" / "test_smollm2.yaml",
-        help="HydraTune YAML config to run (default: configs/test_smollm2.yaml).",
+        help="Tunepac YAML config to run (default: configs/test_smollm2.yaml).",
     )
     args = parser.parse_args()
 
@@ -90,7 +90,7 @@ def main() -> int:
     print(f"Config OK: {args.config}")
     print(f"Dummy dataset: {dataset_path} ({len(DUMMY_RECORDS)} records)")
 
-    from hydratune.training.trainer import run_training  # heavy imports live here
+    from tunepac.training.trainer import run_training  # heavy imports live here
 
     start = time.perf_counter()
     output_dir = run_training(config)
@@ -112,6 +112,6 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except HydraTuneError as exc:
+    except TunepacError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc

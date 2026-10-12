@@ -3,14 +3,14 @@ requires = ["hatchling>=1.24"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hydratune"
+name = "tunepac"
 version = "0.1.0"
 description = "YAML-configurable LLM fine-tuning harness built on TRL, PEFT, and Accelerate."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
-authors = [{ name = "HydraTune contributors" }]
+authors = [{ name = "Tunepac contributors" }]
 keywords = ["llm", "fine-tuning", "lora", "qlora", "trl", "peft"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -35,7 +35,13 @@ dependencies = [
 train = [
     "torch>=2.4",
     "transformers>=4.56",
-    "trl>=0.21",
+    # Upper bound: TRL 1.14 added trl.kernels.chunked_logprob, a Triton kernel
+    # used unconditionally in SFTTrainer.compute_loss. Triton has no CPU
+    # backend, so on CPU this raises either "0 active drivers" (CUDA torch
+    # build, no GPU) or "'NoneType' object has no attribute 'apply'" (triton
+    # absent). That breaks the documented CPU smoke test and the CI
+    # integration job. Lift this once TRL restores a non-Triton fallback.
+    "trl>=0.21,<1.14",
     "peft>=0.15",
     "accelerate>=1.0",
     "bitsandbytes>=0.43",
@@ -51,15 +57,15 @@ dev = [
 ]
 
 [project.scripts]
-hydratune = "hydratune.cli:app"
+tunepac = "tunepac.cli:app"
 
 [project.urls]
-Homepage = "https://github.com/700799/hydratune"
-Repository = "https://github.com/700799/hydratune"
-Issues = "https://github.com/700799/hydratune/issues"
+Homepage = "https://github.com/700799/tunepac"
+Repository = "https://github.com/700799/tunepac"
+Issues = "https://github.com/700799/tunepac/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["hydratune"]
+packages = ["tunepac"]
 
 [tool.ruff]
 line-length = 100
@@ -71,7 +77,7 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.10"
 strict = true
-files = ["hydratune"]
+files = ["tunepac"]
 
 # Heavy ML libraries are opaque typing boundaries: they may be absent (base
 # install), untyped, or lazily re-exporting, and their APIs drift between
@@ -90,7 +96,7 @@ ignore_missing_imports = true
 follow_imports = "skip"
 
 [[tool.mypy.overrides]]
-module = "hydratune.training.trainer"
+module = "tunepac.training.trainer"
 disallow_untyped_calls = false
 
 [tool.pytest.ini_options]

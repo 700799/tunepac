@@ -8,7 +8,7 @@ regardless of which base model is loaded.
 
 from __future__ import annotations
 
-from hydratune.utils.errors import ChatTemplateError
+from tunepac.utils.errors import ChatTemplateError
 
 CHAT_TEMPLATES: dict[str, str] = {
     "chatml": (

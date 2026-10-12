@@ -3,7 +3,7 @@
 The result is a standalone model directory that loads with a plain
 ``AutoModelForCausalLM.from_pretrained`` — no PEFT at inference time.
 
-As with :mod:`hydratune.training.trainer`, every heavy import lives inside a
+As with :mod:`tunepac.training.trainer`, every heavy import lives inside a
 function so the base install (config + CLI) stays free of torch.
 """
 
@@ -12,8 +12,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from hydratune.config.schema import HydraTuneConfig
-from hydratune.utils.errors import ExportError
+from tunepac.config.schema import TunepacConfig
+from tunepac.utils.errors import ExportError
 
 if TYPE_CHECKING:  # pragma: no cover - typing only, avoids hard deps
     from transformers import PreTrainedTokenizerBase
@@ -28,7 +28,7 @@ _TOKENIZER_MARKERS = ("tokenizer_config.json", "tokenizer.json")
 
 
 def _resolve_dirs(
-    config: HydraTuneConfig,
+    config: TunepacConfig,
     adapter_dir: Path | None,
     output_dir: Path | None,
 ) -> tuple[Path, Path]:
@@ -39,7 +39,7 @@ def _resolve_dirs(
 
 
 def _load_tokenizer_for_merge(
-    config: HydraTuneConfig, adapter_dir: Path
+    config: TunepacConfig, adapter_dir: Path
 ) -> PreTrainedTokenizerBase:
     """Prefer the tokenizer saved with the adapter; fall back to the base model.
 
@@ -59,7 +59,7 @@ def _load_tokenizer_for_merge(
 
 
 def merge_adapter(
-    config: HydraTuneConfig,
+    config: TunepacConfig,
     adapter_dir: Path | None = None,
     output_dir: Path | None = None,
 ) -> Path:
@@ -97,7 +97,7 @@ def merge_adapter(
         raise ExportError(
             f"{resolved_adapter} does not look like a PEFT adapter "
             f"(no {ADAPTER_CONFIG_FILE}). Point --adapter at a directory produced "
-            "by 'hydratune train'."
+            "by 'tunepac train'."
         )
     if resolved_output.resolve() == resolved_adapter.resolve():
         raise ExportError(

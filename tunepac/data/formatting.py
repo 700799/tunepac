@@ -2,7 +2,7 @@
 
 Two audiences use this module:
 
-* ``hydratune validate`` calls :func:`inspect_local_dataset`, which peeks at
+* ``tunepac validate`` calls :func:`inspect_local_dataset`, which peeks at
   the first few records of a local file using only the standard library, so
   configs can be sanity-checked on machines without the training extras.
 * The trainer calls :func:`to_messages` per record to normalize every
@@ -18,8 +18,8 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-from hydratune.config.schema import DatasetConfig
-from hydratune.utils.errors import DatasetError
+from tunepac.config.schema import DatasetConfig
+from tunepac.utils.errors import DatasetError
 
 #: Top-level keys each format requires on every record.
 REQUIRED_KEYS: dict[str, tuple[str, ...]] = {

@@ -8,9 +8,9 @@ from typing import Any
 
 import pytest
 
-from hydratune.config.schema import DatasetConfig
-from hydratune.data.formatting import inspect_local_dataset, to_messages
-from hydratune.utils.errors import DatasetError
+from tunepac.config.schema import DatasetConfig
+from tunepac.data.formatting import inspect_local_dataset, to_messages
+from tunepac.utils.errors import DatasetError
 
 # --- to_messages ----------------------------------------------------------
 

@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from hydratune import cli
-from hydratune import export as export_pkg
-from hydratune.cli import app
+from tunepac import cli
+from tunepac import export as export_pkg
+from tunepac.cli import app
 
 runner = CliRunner()
 
@@ -95,7 +95,7 @@ def test_missing_training_extras_is_reported_cleanly(
     assert result.exit_code == 1
     assert result.exception is None or isinstance(result.exception, SystemExit)
     assert "Training dependencies are not installed" in result.output
-    assert "hydratune[train]" in result.output
+    assert "tunepac[train]" in result.output
 
 
 def test_export_reports_missing_adapter(tmp_path: Path) -> None:
@@ -137,7 +137,7 @@ def test_missing_config_file(missing: str) -> None:
 def test_version_flag() -> None:
     result = runner.invoke(app, ["--version"])
     assert result.exit_code == 0
-    assert "hydratune" in result.output
+    assert "tunepac" in result.output
 
 
 def test_no_args_shows_help() -> None:

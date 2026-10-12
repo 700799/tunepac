@@ -1,7 +1,7 @@
-"""Pydantic v2 configuration schema for HydraTune.
+"""Pydantic v2 configuration schema for Tunepac.
 
 Every ``config.yaml`` consumed by the CLI is parsed into
-:class:`HydraTuneConfig`. All sections forbid unknown keys, so a typo like
+:class:`TunepacConfig`. All sections forbid unknown keys, so a typo like
 ``lora_droput`` fails validation loudly instead of being silently ignored.
 
 The schema is the single source of truth for what a valid run looks like;
@@ -293,7 +293,7 @@ class HardwareConfig(StrictModel):
         return self
 
 
-class HydraTuneConfig(StrictModel):
+class TunepacConfig(StrictModel):
     """Root of the ``config.yaml`` schema."""
 
     base_model: BaseModelConfig
@@ -306,7 +306,7 @@ class HydraTuneConfig(StrictModel):
     hardware: HardwareConfig = Field(default_factory=HardwareConfig)
 
     @model_validator(mode="after")
-    def _check_cross_section_invariants(self) -> HydraTuneConfig:
+    def _check_cross_section_invariants(self) -> TunepacConfig:
         if self.training.eval_steps is not None and self.dataset.validation_split is None:
             raise ValueError(
                 "training.eval_steps requires dataset.validation_split to be set"

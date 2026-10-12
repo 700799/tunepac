@@ -1,7 +1,7 @@
-# HydraTune example: QLoRA fine-tuning of Llama-3-8B on Alpaca-style data.
+# Tunepac example: QLoRA fine-tuning of Llama-3-8B on Alpaca-style data.
 #
-#   hydratune validate --config example_config.yaml
-#   hydratune train    --config example_config.yaml
+#   tunepac validate --config example_config.yaml
+#   tunepac train    --config example_config.yaml
 #
 # Fits on a single 24 GB GPU (e.g. RTX 4090) with the settings below.
 

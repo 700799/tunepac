@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import pytest
 
-from hydratune.data.chat_templates import CHAT_TEMPLATES, resolve_chat_template
-from hydratune.utils.errors import ChatTemplateError
+from tunepac.data.chat_templates import CHAT_TEMPLATES, resolve_chat_template
+from tunepac.utils.errors import ChatTemplateError
 
 MESSAGES = [
     {"role": "system", "content": "Be brief."},

@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from hydratune.config.schema import TrainingConfig
-from hydratune.training.trainer import resolve_warmup_steps
+from tunepac.config.schema import TrainingConfig
+from tunepac.training.trainer import resolve_warmup_steps
 
 
 def test_explicit_warmup_steps_pass_through() -> None:
