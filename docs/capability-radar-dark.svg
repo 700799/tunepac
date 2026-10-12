@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 440" width="700" height="440" role="img" aria-label="Tunepac capability profile across seven dimensions, scored 0 to 5. Config validation 5, LoRA/QLoRA 5, dataset formats 4, chat templates 4, adapter export 3, multi-GPU 3, preference tuning 0.">
+<rect width="700" height="440" rx="10" fill="#1a1a19"/>
+<text x="350" y="34" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="17" font-weight="600" fill="#f0efec">What Tunepac does today</text>
+<text x="350" y="55" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="12" fill="#c3c2b7">0 = not built &#183; 5 = fully supported</text>
+<polygon points="350.0,214.6 372.2,225.3 377.7,249.3 362.3,268.6 337.7,268.6 322.3,249.3 327.8,225.3" fill="none" stroke="#3a3a37" stroke-width="1"/>
+<polygon points="350.0,186.2 394.4,207.6 405.4,255.6 374.6,294.2 325.4,294.2 294.6,255.6 305.6,207.6" fill="none" stroke="#3a3a37" stroke-width="1"/>
+<polygon points="350.0,157.8 416.6,189.9 433.1,262.0 387.0,319.8 313.0,319.8 266.9,262.0 283.4,189.9" fill="none" stroke="#3a3a37" stroke-width="1"/>
+<polygon points="350.0,129.4 438.8,172.2 460.8,268.3 399.3,345.4 300.7,345.4 239.2,268.3 261.2,172.2" fill="none" stroke="#3a3a37" stroke-width="1"/>
+<polygon points="350.0,101.0 461.0,154.5 488.4,274.6 411.6,370.9 288.4,370.9 211.6,274.6 239.0,154.5" fill="none" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="350.0" y2="101.0" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="461.0" y2="154.5" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="488.4" y2="274.6" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="411.6" y2="370.9" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="288.4" y2="370.9" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="211.6" y2="274.6" stroke="#3a3a37" stroke-width="1"/>
+<line x1="350" y1="243" x2="239.0" y2="154.5" stroke="#3a3a37" stroke-width="1"/>
+<polygon points="350.0,101.0 461.0,154.5 460.8,268.3 399.3,345.4 313.0,319.8 266.9,262.0 350.0,243.0" fill="#3987e5" fill-opacity="0.22" stroke="#3987e5" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="350.0" cy="101.0" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="461.0" cy="154.5" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="460.8" cy="268.3" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="399.3" cy="345.4" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="313.0" cy="319.8" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="266.9" cy="262.0" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<circle cx="350.0" cy="243.0" r="4.5" fill="#3987e5" stroke="#1a1a19" stroke-width="2"/>
+<text x="350.0" y="85.1" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Config validation <tspan fill="#c3c2b7" font-size="12">(5)</tspan></text>
+<text x="476.6" y="146.1" text-anchor="start" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">LoRA / QLoRA <tspan fill="#c3c2b7" font-size="12">(5)</tspan></text>
+<text x="507.8" y="283.0" text-anchor="start" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Dataset formats <tspan fill="#c3c2b7" font-size="12">(4)</tspan></text>
+<text x="420.2" y="392.8" text-anchor="start" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Chat templates <tspan fill="#c3c2b7" font-size="12">(4)</tspan></text>
+<text x="279.8" y="392.8" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Adapter export <tspan fill="#c3c2b7" font-size="12">(3)</tspan></text>
+<text x="192.2" y="283.0" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Multi-GPU <tspan fill="#c3c2b7" font-size="12">(3)</tspan></text>
+<text x="223.4" y="146.1" text-anchor="end" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#f0efec">Preference tuning <tspan fill="#c3c2b7" font-size="12">(0)</tspan></text>
+</svg>
