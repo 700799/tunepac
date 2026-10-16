@@ -1,0 +1,15 @@
+%% alt: Adapter decision tree: a deep knowledge change with the hardware to match means a full fine-tune; otherwise, if the model fits your GPU at 16-bit use peft.adapter lora, and if it does not fit use qlora, which loads the base in 4-bit so an 8B model fits in 24 GB.
+flowchart TD
+    Q1{"Deep knowledge change?"}
+    Q1 -->|"no — the usual case"| Q2{"Fits your GPU at 16-bit?"}
+    Q1 -->|"`yes, and you
+have the hardware`"| FULL["`Full fine-tune
+_omit the peft section_`"]
+    Q2 -->|"yes"| LORA["`peft.adapter: lora
+_fastest, best quality_`"]
+    Q2 -->|"no"| QLORA["`peft.adapter: qlora
+_4-bit base, 8B fits in 24 GB_`"]
+
+    style FULL fill:#78350f,color:#fff
+    style LORA fill:#14532d,color:#fff
+    style QLORA fill:#1e3a5f,color:#fff

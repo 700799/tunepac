@@ -1,0 +1,30 @@
+%% alt: Tunepac pipeline in three stages. Validate: config.yaml goes through the Pydantic schema; an invalid config stops with a lint-style error report, exit 1, before any GPU work. Prepare: tokenizer and chat template, dataset converted to messages then text, base model loaded in 4-bit for QLoRA. Train and export: TRL SFTTrainer with packing and LoRA writes an adapter, and tunepac export merges it into a model that loads without PEFT.
+flowchart LR
+    subgraph S1 ["1 · validate"]
+        direction TB
+        Y["config.yaml"] --> V{"`Pydantic schema
+validation`"}
+        V -->|"invalid"| E["`lint-style error report
+_exit 1, no GPU touched_`"]
+    end
+    subgraph S2 ["2 · prepare"]
+        direction TB
+        T["`tokenizer
++ chat template`"] --> D["`dataset → messages → text`"]
+        D --> M["`base model
+_4-bit if QLoRA_`"]
+    end
+    subgraph S3 ["3 · train & export"]
+        direction TB
+        S["`TRL SFTTrainer
+_packing · LoRA_`"] --> A["adapter/"]
+        A --> X["tunepac export"]
+        X --> G["`merged model/
+_loads without PEFT_`"]
+    end
+    S1 -->|"valid"| S2
+    S2 --> S3
+
+    style E fill:#7c2d12,color:#fff
+    style G fill:#14532d,color:#fff
+    style V fill:#1e3a5f,color:#fff

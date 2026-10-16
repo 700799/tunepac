@@ -179,3 +179,20 @@ def test_validate_reports_empty_dataset(tmp_path: Path) -> None:
     result = runner.invoke(app, ["validate", "--config", str(config)])
     assert result.exit_code == 1
     assert "no records" in result.output
+
+
+def test_python_dash_m_entrypoint() -> None:
+    # `accelerate launch -m tunepac train ...` depends on this working.
+    import subprocess
+    import sys
+
+    from tunepac import __version__
+
+    result = subprocess.run(
+        [sys.executable, "-m", "tunepac", "--version"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == f"tunepac {__version__}"

@@ -1,7 +1,7 @@
 # Tunepac
 
 [![CI](https://github.com/700799/tunepac/actions/workflows/ci.yml/badge.svg)](https://github.com/700799/tunepac/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/700799/tunepac/blob/main/LICENSE)
 
 **Teach an open-source AI model your company's job — by writing a short settings
@@ -167,24 +167,12 @@ python scripts/run_test.py
 
 ## How it works
 
-```mermaid
-flowchart LR
-    Y["config.yaml"] --> V{"Pydantic schema<br/>validation"}
-    V -->|"invalid"| E["lint-style error report<br/><i>exit 1, no GPU touched</i>"]
-    V -->|"valid"| T["tokenizer<br/>+ chat template"]
-    T --> D["dataset → messages → text"]
-    D --> M["base model<br/><i>4-bit if QLoRA</i>"]
-    M --> S["TRL SFTTrainer<br/><i>packing · LoRA</i>"]
-    S --> A["adapter/"]
-    A --> X["tunepac export"]
-    X --> G["merged model/<br/><i>loads without PEFT</i>"]
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/700799/tunepac/main/docs/diagrams/pipeline-dark.svg">
+  <img alt="Tunepac pipeline in three stages. Validate: config.yaml goes through the Pydantic schema; an invalid config stops with a lint-style error report, exit 1, before any GPU work. Prepare: tokenizer and chat template, dataset converted to messages then text, base model loaded in 4-bit for QLoRA. Train and export: TRL SFTTrainer with packing and LoRA writes an adapter, and tunepac export merges it into a model that loads without PEFT." src="https://raw.githubusercontent.com/700799/tunepac/main/docs/diagrams/pipeline-light.svg" width="830">
+</picture>
 
-    style E fill:#7c2d12,color:#fff
-    style G fill:#14532d,color:#fff
-    style V fill:#1e3a5f,color:#fff
-```
-
-The pipeline in words, for anywhere Mermaid doesn't render:
+The pipeline in words:
 
 | Step | What happens | Fails fast if |
 |---|---|---|
@@ -202,18 +190,10 @@ laptop with no CUDA.
 
 ### Which adapter should I use?
 
-```mermaid
-flowchart TD
-    Q1{"Deep knowledge change?"}
-    Q1 -->|"no — the usual case"| Q2{"Fits your GPU at 16-bit?"}
-    Q1 -->|"yes, and you<br/>have the hardware"| FULL["Full fine-tune<br/><i>omit the peft section</i>"]
-    Q2 -->|"yes"| LORA["peft.adapter: lora<br/><i>fastest, best quality</i>"]
-    Q2 -->|"no"| QLORA["peft.adapter: qlora<br/><i>4-bit base, 8B fits in 24 GB</i>"]
-
-    style FULL fill:#78350f,color:#fff
-    style LORA fill:#14532d,color:#fff
-    style QLORA fill:#1e3a5f,color:#fff
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/700799/tunepac/main/docs/diagrams/adapter-choice-dark.svg">
+  <img alt="Adapter decision tree: a deep knowledge change with the hardware to match means a full fine-tune; otherwise, if the model fits your GPU at 16-bit use peft.adapter lora, and if it does not fit use qlora, which loads the base in 4-bit so an 8B model fits in 24 GB." src="https://raw.githubusercontent.com/700799/tunepac/main/docs/diagrams/adapter-choice-light.svg" width="500">
+</picture>
 
 | Choice | Memory | Quality | When |
 |---|---|---|---|
