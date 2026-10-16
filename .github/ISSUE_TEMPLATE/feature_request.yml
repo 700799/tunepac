@@ -1,0 +1,17 @@
+name: Feature request
+description: Something Tunepac should do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that you can't today?
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: What the config would look like
+      description: Sketch the YAML you'd want to write. The schema is the contract, so this is the clearest way to describe a feature.
+      render: yaml
